@@ -1,0 +1,9 @@
+[submodule "conf"]
+	path = conf
+	url = git@github.com:genomictools/conf.git
+[submodule "modules"]
+	path = modules
+	url = git@github.com:genomictools/modules.git
+[submodule "subworkflows"]
+	path = subworkflows
+	url = git@github.com:genomictools/subworkflows.git
