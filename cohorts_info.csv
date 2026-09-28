@@ -1,0 +1,3 @@
+cohort,key,file,index
+gnomad,chr21,input/gnomad.sites.chr21.vcf.gz,input/gnomad.sites.chr21.vcf.gz.tbi
+gnomad,chr22,input/gnomad.sites.chr22.vcf.gz,input/gnomad.sites.chr22.vcf.gz.tbi
