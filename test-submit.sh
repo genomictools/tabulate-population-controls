@@ -12,5 +12,5 @@ module load Nextflow
 # Run nextflow
 nextflow run main.nf \
     --output_dir test-datasets/results/ \
-    -profile local,test \
+    -profile cluster,test \
     -resume

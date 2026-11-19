@@ -67,12 +67,12 @@ process FILTER {
     """
     #!/bin/bash
     # Apply the filters using bcftools
-    bcftools view ${file} | \
-    if   [ ${params.AC} > 0 ];              then bcftools view -i "${params.AC_COL} >= ${params.AC}"; fi | \
-    if   [ "${params.freq_tag}" = "VEP"  ]; then bcftools +split-vep -a "${params.vep_tag}" -s worst -c "${params.AF_COL}:Float" -e "${params.AF_COL} > ${params.AF}"; else bcftools filter -e "${params.AF_COL} > ${params.AF}" ; fi | \
-    if   [ "$any_remove" = "true" ];        then bcftools +split-vep -a "${params.vep_tag}" -s worst -c "$rel_cols_str" -e "$rel_expr_str"; else bcftools view; fi | \
-    if   [ "${category}" != "Rare" ];       then bcftools +split-vep -a "${params.vep_tag}" -s worst -c "$cat_cols_str" -i "$cat_expr_str"; else bcftools view; fi | \
-    bcftools annotate --set-id '%CHROM:%POS:%REF:%ALT' | \
+    bcftools view -f PASS -e 'INFO/lcr=1 || INFO/segdup=1 || INFO/fail_interval_qc=1' -Ou ${file} | \
+    if   [ ${params.AC} -gt 0 ];            then bcftools view -i "${params.AC_COL} >= ${params.AC}" -Ou; else cat; fi | \
+    if   [ "${params.freq_tag}" = "VEP"  ]; then bcftools +split-vep -a "${params.vep_tag}" -s worst -c "${params.AF_COL}:Float" -e "${params.AF_COL} > ${params.AF}" -Ou; else bcftools filter -e "${params.AF_COL} > ${params.AF}" -Ou; fi | \
+    if   [ "$any_remove" = "true" ];        then bcftools +split-vep -a "${params.vep_tag}" -s worst -c "$rel_cols_str" -e "$rel_expr_str" -Ou; else cat; fi | \
+    if   [ "${category}" != "Rare" ];       then bcftools +split-vep -a "${params.vep_tag}" -s worst -c "$cat_cols_str" -i "$cat_expr_str" -Ou; else cat; fi | \
+    bcftools annotate --set-id '%CHROM:%POS:%REF:%ALT' -Ou | \
     bcftools view --threads ${task.cpus} -Oz -o ${cohort}.${key}.${category}.vcf.gz
 
     # Index the VCF
